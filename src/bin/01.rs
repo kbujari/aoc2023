@@ -14,7 +14,7 @@ fn to_numchar(s: &str) -> char {
 }
 
 fn main() {
-    let input = aoc2023::get_input("input/01.txt");
+    let input = aoc2023::get_input("01");
 
     let p1 = input
         .lines()
