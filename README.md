@@ -1,4 +1,4 @@
-## advent of code 2023
+## 🎄 advent of code 2023 🎄
 
 goals: 
 - no dependencies
