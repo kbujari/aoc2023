@@ -86,8 +86,7 @@ fn main() {
         .values()
         .filter_map(|val| {
             if val.len() == 2 {
-                let prod = val.into_iter().product::<usize>();
-                Some(prod)
+                Some(val.iter().product::<usize>())
             } else {
                 None
             }

@@ -1,65 +1,52 @@
 use std::collections::HashMap;
 
-fn gcd(mut a: usize, mut b: usize) -> usize {
-    if a == b {
-        return a;
-    }
-    if b > a {
-        let temp = a;
-        a = b;
-        b = temp;
-    }
+const fn gcd(mut a: usize, mut b: usize) -> usize {
     while b > 0 {
-        let temp = a;
-        a = b;
-        b = temp % b;
+        (a, b) = (b, a % b);
     }
-    return a;
+
+    a
 }
 
-fn lcm(a: usize, b: usize) -> usize {
-    return a * (b / gcd(a, b));
+const fn lcm(a: usize, b: usize) -> usize {
+    (a * b) / gcd(a, b)
 }
 
-fn main() {
-    let input = include_str!("../../input/08.txt");
-
-    let map = input
-        .lines()
+fn to_map(data: &str) -> HashMap<&str, (&str, &str)> {
+    data.lines()
         .skip(2)
         .map(|line| {
             let lvec = line.split(" = ").collect::<Vec<&str>>();
 
             let vals = lvec[1].split(", ").collect::<Vec<&str>>();
-            let left = vals[0].chars().skip(1).collect::<String>();
-            let right = vals[1].chars().take(3).collect::<String>();
+            let left = vals[0].strip_prefix('(').unwrap();
+            let right = vals[1].strip_suffix(')').unwrap();
 
             (lvec[0], (left, right))
         })
-        .fold(
-            HashMap::<&str, (String, String)>::new(),
-            |mut map, (key, (left, right))| {
-                map.insert(key, (left, right));
-                map
-            },
-        );
+        .fold(HashMap::new(), |mut map, (key, (left, right))| {
+            map.insert(key, (left, right));
+            map
+        })
+}
 
-    let p1 = input
-        .lines()
-        .nth(0)
-        .unwrap()
-        .chars()
-        .cycle()
+fn main() {
+    let input = include_str!("../../input/08.txt");
+    let map = to_map(input);
+    let directions = input.split_once('\n').unwrap().0.chars().cycle();
+
+    let p1 = directions
+        .clone()
         .try_fold(("AAA", 1usize), |(key, count), direction| {
-            let dest = map.get(key).unwrap();
+            let (left, right) = map.get(key).unwrap();
 
             let nkey = match direction {
-                'L' => &dest.0,
-                'R' => &dest.1,
-                _ => panic!("Invalid direction!"),
+                'L' => left,
+                'R' => right,
+                _ => unreachable!(),
             };
 
-            if nkey == "ZZZ" {
+            if *nkey == "ZZZ" {
                 return Err(count);
             }
 
@@ -69,30 +56,28 @@ fn main() {
 
     let p2 = map
         .keys()
-        .filter(|key| key.chars().next_back().unwrap() == 'A')
-        .copied()
-        .map(|start| {
-            input
-                .lines()
-                .nth(0)
-                .unwrap()
-                .chars()
-                .cycle()
-                .try_fold((start, 1usize), |(key, count), direction| {
-                    let dest = map.get(key).unwrap();
+        .filter(|key| key.ends_with('A'))
+        .map(|node| {
+            directions
+                .clone()
+                .try_fold((node, 1usize), |(key, count), direction| {
+                    let (left, right) = map.get(key).unwrap();
                     let nkey = match direction {
-                        'L' => &dest.0,
-                        'R' => &dest.1,
-                        _ => panic!("Invalid direction!"),
+                        'L' => left,
+                        'R' => right,
+                        _ => unreachable!(),
                     };
-                    if nkey.chars().next_back().unwrap() == 'Z' {
+
+                    if nkey.ends_with('Z') {
                         return Err(count);
                     }
+
                     Ok((nkey, count + 1))
                 })
                 .unwrap_err()
         })
-        .fold(1usize, lcm);
+        .reduce(lcm)
+        .unwrap();
 
     println!("{p1} {p2}");
 }

@@ -23,7 +23,7 @@ fn main() {
         .clone()
         .map(|(win, have)| {
             have.into_iter()
-                .filter(move |el| win.contains(&el))
+                .filter(move |el| win.contains(el))
                 .fold(1, |acc, _| acc * 2)
                 / 2
         })
@@ -34,7 +34,7 @@ fn main() {
             (0, VecDeque::from([1usize])),
             |(total, mut acc), (win, have)| {
                 let mult = acc.pop_front().unwrap_or(1);
-                let wins = have.into_iter().filter(|x| win.contains(&x)).count();
+                let wins = have.into_iter().filter(|x| win.contains(x)).count();
 
                 if acc.len() < wins {
                     acc.extend(vec![1; wins - acc.len()])

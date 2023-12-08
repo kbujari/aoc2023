@@ -33,7 +33,6 @@ fn main() {
         .map(|lvec| {
             let cards: [Card; 5] = lvec[0]
                 .chars()
-                .into_iter()
                 .map(|ch| match ch {
                     'T' => Card::Number(10),
                     // 'J' => Card::Jack,

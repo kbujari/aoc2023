@@ -6,7 +6,7 @@ fn main() {
 
     let input = input
         .clone()
-        .nth(0)
+        .next()
         .unwrap()
         .zip(input.clone().nth(1).unwrap());
 
