@@ -78,7 +78,11 @@ fn main() {
 
     input.sort_unstable();
 
-    let p1 = input.iter().enumerate().map(|(idx, (_, bid))| (idx + 1) * bid).sum::<usize>();
+    let p1 = input
+        .iter()
+        .enumerate()
+        .map(|(idx, (_, bid))| (idx + 1) * bid)
+        .sum::<usize>();
 
     println!("{p1}");
 }

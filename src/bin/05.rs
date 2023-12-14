@@ -15,9 +15,9 @@ fn main() {
 
     // part 2
     /* let seeds = seeds
-        .chunks(2)
-        .into_iter()
-        .flat_map(|chunk| (chunk[0]..chunk[1]).collect::<Vec<usize>>()); */
+    .chunks(2)
+    .into_iter()
+    .flat_map(|chunk| (chunk[0]..chunk[1]).collect::<Vec<usize>>()); */
 
     let x = input.split("\n\n").skip(1).map(|mapstr| {
         mapstr.lines().skip(1).map(|map| {
